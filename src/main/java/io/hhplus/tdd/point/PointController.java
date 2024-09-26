@@ -1,5 +1,6 @@
 package io.hhplus.tdd.point;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -8,9 +9,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/point")
+@RequiredArgsConstructor
 public class PointController {
 
     private static final Logger log = LoggerFactory.getLogger(PointController.class);
+    private final PointService pointService;
+    private final PointHistoryService pointHistoryService;
 
     /**
      * TODO - 특정 유저의 포인트를 조회하는 기능을 작성해주세요.
@@ -19,7 +23,7 @@ public class PointController {
     public UserPoint point(
             @PathVariable long id
     ) {
-        return new UserPoint(0, 0, 0);
+        return pointService.selectPoint(id);
     }
 
     /**
@@ -29,7 +33,7 @@ public class PointController {
     public List<PointHistory> history(
             @PathVariable long id
     ) {
-        return List.of();
+        return pointHistoryService.selectAllUserPointHistory(id);
     }
 
     /**
@@ -40,7 +44,11 @@ public class PointController {
             @PathVariable long id,
             @RequestBody long amount
     ) {
-        return new UserPoint(0, 0, 0);
+        UserPoint chargedUserPoint = pointService.charge(id, amount);
+
+        pointHistoryService.createPointHistory(chargedUserPoint.id(), chargedUserPoint.point(), TransactionType.CHARGE, chargedUserPoint.updateMillis());
+
+        return chargedUserPoint;
     }
 
     /**
@@ -51,6 +59,10 @@ public class PointController {
             @PathVariable long id,
             @RequestBody long amount
     ) {
-        return new UserPoint(0, 0, 0);
+        UserPoint usedUserPoint = pointService.use(id, amount);
+
+        pointHistoryService.createPointHistory(usedUserPoint.id(), usedUserPoint.point(), TransactionType.USE, usedUserPoint.updateMillis());
+
+        return usedUserPoint;
     }
 }
