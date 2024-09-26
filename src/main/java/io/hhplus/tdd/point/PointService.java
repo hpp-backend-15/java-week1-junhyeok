@@ -2,22 +2,19 @@ package io.hhplus.tdd.point;
 
 import io.hhplus.tdd.database.UserPointTable;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class PointService {
 	private final UserPointTable    userPointTable;
-	private static final Logger log = LoggerFactory.getLogger(PointController.class);
 
 	/**
 	 * 포인트 충전
 	 * */
 	public UserPoint chargePoint(long id, long amount) {
-		if (amount < 0)
-			throw new IllegalArgumentException("포인트 충전 금액이 0보다 작습니다");
+		if (amount < 1)
+			throw new IllegalArgumentException("포인트 충전 금액이 1보다 작습니다");
 
 		UserPoint userPoint   = userPointTable.selectById(id);
 		long currentPoint     = userPoint.point();
@@ -30,8 +27,8 @@ public class PointService {
 	 * 포인트 사용
 	 * */
 	public UserPoint usePoint(long id, long amount) {
-		if (amount < 0)
-			throw new IllegalArgumentException("포인트 사용 금액이 0보다 작습니다");
+		if (amount < 1)
+			throw new IllegalArgumentException("포인트 사용 금액이 1보다 작습니다");
 
 		UserPoint userPoint   = userPointTable.selectById(id);
 		long currentPoint     = userPoint.point();
