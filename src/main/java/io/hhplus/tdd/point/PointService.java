@@ -53,14 +53,14 @@ public class PointService {
 	/**
 	 * 유저 포인트 조회
 	 * */
-	public UserPoint getPointById(long id) {
+	public UserPoint getPoint(long id) {
 		return userPointTable.selectById(id);
 	}
 
 	/**
 	 * 유저 포인트 히스토리 조회
 	 * */
-	public List<PointHistory> getPointHistoryById(long id) {
+	public List<PointHistory> getPointHistory(long id) {
 		return pointHistoryTable.selectAllByUserId(id);
 	}
 }
