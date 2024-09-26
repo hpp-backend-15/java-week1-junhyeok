@@ -16,7 +16,7 @@ public class PointServiceTest {
     @BeforeEach
     void setUp() {
         userPointTable      = new MemoryUserPointTable();
-        pointService        = new PointService(userPointTable);
+        pointService        = new PointService(userPointTable, new LockManager());
     }
 
     @Test
@@ -25,7 +25,7 @@ public class PointServiceTest {
         userPointTable.insertOrUpdate(1L, 500L);
 
         // When
-        UserPoint updatedUserPoint = pointService.chargePoint(1L, 100L);
+        UserPoint updatedUserPoint = pointService.charge(1L, 100L);
 
         // Then
         assertEquals(600L, updatedUserPoint.point());
@@ -35,7 +35,7 @@ public class PointServiceTest {
     @Test
     void 포인트_충전금액이_1보다_작으면_예외() {
         assertThrows(IllegalArgumentException.class, () -> {
-            pointService.chargePoint(1L, 0);
+            pointService.charge(1L, 0);
         });
     }
 
@@ -45,7 +45,7 @@ public class PointServiceTest {
         userPointTable.insertOrUpdate(1L, 500L);
 
         // When
-        UserPoint updatedUserPoint = pointService.usePoint(1L, 100L);
+        UserPoint updatedUserPoint = pointService.use(1L, 100L);
 
         // Then
         assertEquals(400L, updatedUserPoint.point());
@@ -55,7 +55,7 @@ public class PointServiceTest {
     @Test
     void 포인트_사용금액이_1보다_작으면_예외() {
         assertThrows(IllegalArgumentException.class, () -> {
-            pointService.usePoint(1L, 0);
+            pointService.use(1L, 0);
         });
     }
 
@@ -66,7 +66,7 @@ public class PointServiceTest {
 
         // When, Then
         assertThrows(IllegalStateException.class, () -> {
-            pointService.usePoint(1L, 200L);
+            pointService.use(1L, 200L);
         });
     }
 }
