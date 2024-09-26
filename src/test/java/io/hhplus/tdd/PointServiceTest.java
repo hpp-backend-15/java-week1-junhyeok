@@ -1,8 +1,6 @@
 package io.hhplus.tdd;
 
-import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
-import io.hhplus.tdd.point.PointHistoryService;
 import io.hhplus.tdd.point.PointService;
 import io.hhplus.tdd.point.UserPoint;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,18 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PointServiceTest {
-    private UserPoint           userPoint;
     private PointService        pointService;
-    private PointHistoryService pointHistoryService;
     private UserPointTable      userPointTable;
-    private PointHistoryTable   pointHistoryTable;
 
     @BeforeEach
     void setUp() {
         userPointTable      = new MemoryUserPointTable();
-        pointHistoryTable   = new MemoryPointHistoryTable();
         pointService        = new PointService(userPointTable);
-        pointHistoryService = new PointHistoryService(pointHistoryTable);
     }
 
     @Test
