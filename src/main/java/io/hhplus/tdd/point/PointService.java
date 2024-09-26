@@ -2,12 +2,15 @@ package io.hhplus.tdd.point;
 
 import io.hhplus.tdd.database.UserPointTable;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class PointService {
 	private final UserPointTable    userPointTable;
+	private static final Logger log = LoggerFactory.getLogger(PointController.class);
 
 	/**
 	 * 포인트 충전
@@ -20,7 +23,7 @@ public class PointService {
 		long currentPoint     = userPoint.point();
 		long updatedPoint     = currentPoint + amount;
 
-		return new UserPoint(id, updatedPoint, System.currentTimeMillis());
+		return userPointTable.insertOrUpdate(id, updatedPoint);
 	}
 
 	/**
@@ -38,7 +41,7 @@ public class PointService {
 
 		long updatedPoint     = currentPoint - amount;
 
-		return new UserPoint(id, updatedPoint, System.currentTimeMillis());
+		return userPointTable.insertOrUpdate(id, updatedPoint);
 	}
 
 	/**
